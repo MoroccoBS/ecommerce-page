@@ -55,7 +55,7 @@ export default function Navbar() {
   return (
     <>
       <nav
-        className={`w-full flex gap-10 items-center max-w-[1400px] px-4 relative ${
+        className={`w-full flex gap-10 items-center max-w-[1200px] px-4 relative ${
           isMobile ? "py-6" : "py-0"
         }`}
       >

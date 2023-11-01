@@ -78,7 +78,7 @@ body {
     @apply border-border;
   }
   body {
-    @apply bg-secondary text-foreground;
+    @apply bg-secondary text-foreground flex items-center;
   }
 }
 
@@ -105,10 +105,40 @@ body {
   outline: 1px dashed red;
 } */
 
-.icon path {
-  fill: white;
+.spinner svg {
+  width: 3.25em;
+  transform-origin: center;
+  animation: rotate4 2s linear infinite;
 }
 
-icon2 path {
-  fill: hsl(var(--foreground));
+.spinner svg circle {
+  fill: none;
+  stroke: hsl(214, 97%, 59%);
+  stroke-width: 2;
+  stroke-dasharray: 1, 200;
+  stroke-dashoffset: 0;
+  stroke-linecap: round;
+  animation: dash4 1.5s ease-in-out infinite;
+}
+
+@keyframes rotate4 {
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes dash4 {
+  0% {
+    stroke-dasharray: 1, 200;
+    stroke-dashoffset: 0;
+  }
+
+  50% {
+    stroke-dasharray: 90, 200;
+    stroke-dashoffset: -35px;
+  }
+
+  100% {
+    stroke-dashoffset: -125px;
+  }
 }

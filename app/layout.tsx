@@ -5,11 +5,11 @@ import { ThemeProvider } from "@/providers/theme-provider";
 import Navbar from "@/components/Navbar/Navbar";
 import { cn } from "@/lib/utils";
 import ToastProvider from "@/providers/toast-provider";
+import SessionProvider from "@/providers/session-provider";
 
 const font = Kumbh_Sans({
   subsets: ["latin"],
   variable: "--font-sans",
-  weight: ["400", "700"],
 });
 
 export const metadata: Metadata = {
@@ -23,16 +23,14 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en">
-      <body
-        className={cn(font.className, "h-full flex flex-col")}
-        suppressHydrationWarning
-      >
-        <ThemeProvider attribute="class" enableSystem defaultTheme="light">
-          <ToastProvider />
-          <Navbar />
-          {children}
-        </ThemeProvider>
+    <html lang="en" suppressHydrationWarning>
+      <body className={cn(font.className, "h-full")}>
+        <SessionProvider>
+          <ThemeProvider attribute="class" enableSystem defaultTheme="light">
+            <ToastProvider />
+            {children}
+          </ThemeProvider>
+        </SessionProvider>
       </body>
     </html>
   );

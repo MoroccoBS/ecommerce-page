@@ -14,6 +14,7 @@ import useCart from "@/store/store";
 import CartItem from "./CartItem";
 import { AnimatePresence, motion } from "framer-motion";
 import Button from "../Button";
+import { FaShoppingCart } from "react-icons/fa";
 
 interface CartProps {
   className?: string;
@@ -27,11 +28,9 @@ export default function Cart({ className }: CartProps) {
     <DropdownMenu>
       <DropdownMenuTrigger className="outline-none border-none">
         <div className={cn(className, "relative")}>
-          <ReactSVG
-            src={"/images/icon-cart.svg"}
-            width={40}
-            height={40}
-            className="transition-all cursor-pointer opacity-50 hover:opacity-100 aspect-square icon2"
+          <FaShoppingCart
+            size={22}
+            className="transition-all cursor-pointer opacity-50 hover:opacity-100"
           />
           <AnimatePresence mode="wait">
             {items.length > 0 && (

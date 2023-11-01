@@ -5,6 +5,8 @@ import Button from "../Button";
 import useCart from "@/store/store";
 import toast from "react-hot-toast";
 import { IoWarningOutline } from "react-icons/io5";
+import { AiOutlineMinus, AiOutlinePlus } from "react-icons/ai";
+import { FaShoppingCart } from "react-icons/fa";
 
 export default function AddItem() {
   const { items, add, decrease, increase } = useCart();
@@ -47,33 +49,18 @@ export default function AddItem() {
     <div className="w-full flex gap-4">
       <div className="w-1/2 flex justify-between items-center max-w-[150px]">
         <button className="" onClick={() => handleDecrease()}>
-          <ReactSVG
-            src={"/images/icon-minus.svg"}
-            width={20}
-            height={20}
-            className="fill-white"
-          />
+          <AiOutlineMinus size={22} className="fill-primary" />
         </button>
         <h1 className="font-bold text-lg">{quantity}</h1>
         <button onClick={() => handleIncrease()}>
-          <ReactSVG
-            src={"/images/icon-plus.svg"}
-            width={20}
-            height={20}
-            className="fill-white"
-          />
+          <AiOutlinePlus size={22} className="fill-primary" />
         </button>
       </div>
       <Button
         className="w-full shadow-2xl flex gap-4"
         onClick={() => handleAddToCart()}
       >
-        <ReactSVG
-          src={"/images/icon-cart.svg"}
-          width={20}
-          height={20}
-          className="stroke-white icon"
-        />
+        <FaShoppingCart size={22} />
         <h1>Add to Cart</h1>
       </Button>
     </div>
