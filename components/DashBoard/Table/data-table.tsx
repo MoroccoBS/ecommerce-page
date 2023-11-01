@@ -27,7 +27,7 @@ interface DataTableProps<TData, TValue> {
   name: string;
   button?: boolean;
   btnLabel?: string;
-  setModal: React.Dispatch<React.SetStateAction<boolean>>;
+  setModal?: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 export function DataTable<TData, TValue>({
@@ -66,7 +66,7 @@ export function DataTable<TData, TValue>({
         {button && (
           <button
             className="text-md px-4 py-2 outline-dashed outline-foreground outline-1 rounded-xl hover:bg-primary/75 hover:text-white transition-all hover:shadow-xl"
-            onClick={() => setModal(true)}
+            onClick={() => setModal?.(true)}
           >
             {btnLabel}
           </button>
