@@ -1,5 +1,6 @@
 import { withAuth } from "next-auth/middleware";
 import { NextRequest, NextResponse } from "next/server";
+import getUser from "./app/api/actions/getUser";
 
 export default withAuth({
   pages: {

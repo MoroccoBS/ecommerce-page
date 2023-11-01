@@ -1,18 +1,18 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import Spinner from "../Spinner";
 import { AnimatePresence, motion } from "framer-motion";
 import { User, Role } from "@prisma/client";
-import DashBoard from "./DashBoard";
 import Link from "next/link";
-import { Button } from "../ui/button";
+import Spinner from "@/components/Spinner";
+import { Button } from "@/components/ui/button";
 
 interface LoaderProps {
   user: User;
+  children: React.ReactNode;
 }
 
-export default function Loader({ user }: LoaderProps) {
+export default function Loader({ user, children }: LoaderProps) {
   const [loading, setLoading] = useState(true);
   const [isAdmin, setIsAdmin] = useState(false);
   const [spinner, setSpinner] = useState(true);
@@ -39,7 +39,6 @@ export default function Loader({ user }: LoaderProps) {
 
   useEffect(() => {
     checkIfAdmin(user);
-    console.log(user);
   }, [user]);
 
   return (
@@ -77,7 +76,7 @@ export default function Loader({ user }: LoaderProps) {
           </motion.div>
         )}
       </AnimatePresence>
-      {!loading && isAdmin && <DashBoard user={user as User} />}
+      {!loading && isAdmin && children}
     </>
   );
 }
