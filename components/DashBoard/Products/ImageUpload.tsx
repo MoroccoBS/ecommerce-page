@@ -1,6 +1,6 @@
 "use client";
 import Image from "next/image";
-import PlaceHolder from "@/public/images/placeHolder.svg";
+import PlaceHolder from "@/public/images/placeholder.svg";
 import { useCallback, useRef, useState } from "react";
 import ImageItem from "./ImageItem";
 interface ImageUploadProps {
@@ -79,7 +79,7 @@ export default function ImageUpload({
           </span>
         </h1>
       </div>
-      <div className="max-h-20 overflow-x-auto flex w-full mt-6 items-center justify-center">
+      <div className="max-h-20 overflow-x-auto flex w-full mt-6 items-center justify-center gap-6">
         {selectedFiles?.map((file: File, index: number) => (
           <ImageItem
             src={URL.createObjectURL(file)}
