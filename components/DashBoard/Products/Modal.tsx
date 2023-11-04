@@ -87,6 +87,7 @@ export default function Modal({
 
   const handleForm = async () => {
     setLoading(true);
+
     try {
       const isValid = await productSchema.validate(values, {
         abortEarly: false,

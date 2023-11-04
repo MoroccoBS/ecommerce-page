@@ -1,6 +1,6 @@
 "use client";
 import Image from "next/image";
-import PlaceHolder from "@/public/images/PlaceHolder.svg";
+import PlaceHolder from "@/public/images/placeHolder.svg";
 import { useCallback, useRef, useState } from "react";
 import ImageItem from "./ImageItem";
 interface ImageUploadProps {
