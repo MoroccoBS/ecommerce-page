@@ -1,45 +1,42 @@
 "use client";
 import Image from "next/image";
 import PlaceHolder from "@/public/images/PlaceHolder.svg";
-import { useRef, useState } from "react";
+import { useCallback, useRef, useState } from "react";
 import ImageItem from "./ImageItem";
-type FileState = File[];
+interface ImageUploadProps {
+  selectedFiles: File[];
+  setSelectedFiles: React.Dispatch<React.SetStateAction<File[]>>;
+  fileTypes?: string[];
+}
+import { useDropzone } from "@uploadthing/react/hooks";
+import type { FileWithPath } from "@uploadthing/react";
+import { generateClientDropzoneAccept } from "uploadthing/client";
 
-export default function ImageUpload() {
+export default function ImageUpload({
+  selectedFiles,
+  setSelectedFiles,
+  fileTypes,
+}: ImageUploadProps) {
   const [dragActive, setDragActive] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
-  const [selectedFiles, setSelectedFiles] = useState<FileState>([]);
 
-  const handleDragEnter = (e: React.DragEvent<HTMLFormElement>) => {
-    setDragActive(true);
-  };
+  const onDrop = useCallback(
+    (acceptedFiles: FileWithPath[]) => {
+      setSelectedFiles((prev) => [...prev, ...acceptedFiles]);
+    },
+    [setSelectedFiles]
+  );
 
-  const handleDrop = (e: React.DragEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    e.stopPropagation();
-    setDragActive(false);
-    if (e.dataTransfer.files && e.dataTransfer.files[0]) {
-      for (let i = 0; i < e.dataTransfer.files.length; i++) {
-        setSelectedFiles((prevState: FileState) => [
-          ...prevState,
-          e.dataTransfer.files[i],
-        ]);
-      }
-    }
-    console.log(selectedFiles);
-  };
-
-  const handleDragLeave = (e: React.DragEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    e.stopPropagation();
-    setDragActive(false);
-  };
-
-  const handleDragOver = (e: React.DragEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    e.stopPropagation();
-    setDragActive(true);
-  };
+  const { getRootProps, getInputProps } = useDropzone({
+    onDrop,
+    onDragEnter: () => {
+      setDragActive(true);
+    },
+    onDragLeave: () => {
+      setDragActive(false);
+    },
+    accept: fileTypes ? generateClientDropzoneAccept(fileTypes) : undefined,
+  });
 
   const openFileExplorer = () => {
     if (inputRef.current) {
@@ -57,39 +54,14 @@ export default function ImageUpload() {
 
   return (
     <div>
-      <form
+      <div
         className={`w-full p-10 bg-white rounded-xl cursor-pointer outline-2 outline-dashed outline-ring/50 flex mt-10 ${
           dragActive ? "bg-primary/50 outline-ring" : "bg-white"
         } transition-all items-center justify-center`}
-        onDragEnter={handleDragEnter}
-        onDrop={handleDrop}
-        onSubmit={(e) => {
-          e.preventDefault();
-          e.stopPropagation();
-        }}
-        onDragLeave={handleDragLeave}
-        onDragOver={handleDragOver}
+        {...getRootProps()}
+        onClick={openFileExplorer}
       >
-        <input
-          placeholder="fileInput"
-          className="hidden"
-          ref={inputRef}
-          type="file"
-          multiple={true}
-          // onChange={handleChange}
-          accept="image/*"
-          onChange={(e) => {
-            const { files } = e.target;
-            if (files) {
-              for (let i = 0; i < files.length; i++) {
-                setSelectedFiles((prevState: FileState) => [
-                  ...prevState,
-                  files[i],
-                ]);
-              }
-            }
-          }}
-        />
+        <input {...getInputProps()} ref={inputRef} />
         <Image
           src={PlaceHolder}
           alt="placeholder"
@@ -106,7 +78,7 @@ export default function ImageUpload() {
             Click to Upload
           </span>
         </h1>
-      </form>
+      </div>
       <div className="max-h-20 overflow-x-auto flex w-full mt-6 items-center justify-center">
         {selectedFiles?.map((file: File, index: number) => (
           <ImageItem

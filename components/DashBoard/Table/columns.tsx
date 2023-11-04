@@ -1,7 +1,9 @@
 "use client";
+import getImagesOfProduct from "@/app/api/actions/getImage";
 import { Order, Product, User } from "@prisma/client";
 
 import { ColumnDef } from "@tanstack/react-table";
+import Image from "next/image";
 
 // This type is used to define the shape of our data.
 // You can use a Zod schema here if you want.
@@ -10,6 +12,19 @@ export const productsColumns: ColumnDef<Product>[] = [
   {
     accessorKey: "name",
     header: "Name",
+    cell: ({ row }) => {
+      return (
+        <div className="flex gap-4">
+          <h1>{row.getValue("name")}</h1>
+          {/* <Image
+            src={image?.images}
+            alt={row.getValue("name")}
+            width={50}
+            height={50}
+          /> */}
+        </div>
+      );
+    },
   },
   {
     accessorKey: "price",
@@ -31,7 +46,11 @@ export const productsColumns: ColumnDef<Product>[] = [
     accessorKey: "discount",
     header: "Discount",
     cell: ({ row }) => {
-      return <div className="font-medium">{row.getValue("discount")}%</div>;
+      return (
+        <div className="font-medium">
+          {row.getValue("discount") === null ? 0 : row.getValue("discount")}%
+        </div>
+      );
     },
   },
 ];

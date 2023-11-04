@@ -15,11 +15,11 @@ export async function POST(request: Request) {
   const product: Product = await prisma.product.create({
     data: {
       name,
-      price,
+      price: parseFloat(price),
       description,
       images: {
-        create: images.map((image: Image) => ({
-          url: image,
+        create: images.map((image: any) => ({
+          url: image.fileUrl,
         })),
       },
     },

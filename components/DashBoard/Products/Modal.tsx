@@ -9,21 +9,81 @@ import ImageUpload from "./ImageUpload";
 import Input from "@/components/SingIn/Input";
 import { productSchema } from "@/validations/product-validation";
 import { useState } from "react";
+import { useUploadThing } from "@/lib/upload-thing";
+import { Button } from "@/components/ui/button";
+import axios from "axios";
+import toast from "react-hot-toast";
+import Spinner from "@/components/Spinner";
+import { Product } from "@prisma/client";
 
-export default function Modal() {
+interface ModalProps {
+  setProductModal: React.Dispatch<React.SetStateAction<boolean>>;
+  setProductState: React.Dispatch<React.SetStateAction<Product[]>>;
+}
+
+export default function Modal({
+  setProductModal,
+  setProductState,
+}: ModalProps) {
   const [values, setValues] = useState({
     name: "",
     description: "",
     price: "",
-    category: "",
   });
   const [errors, setErrors] = useState({
     name: "",
     description: "",
     price: "",
-    category: "",
   });
+  const [selectedFiles, setSelectedFiles] = useState<File[]>([]);
   const [loading, setLoading] = useState(false);
+
+  const { startUpload, permittedFileInfo, isUploading } = useUploadThing(
+    "imageUploader",
+    {
+      onClientUploadComplete: async (images) => {
+        toast.success("Images uploaded successfully");
+        toast.remove("loading");
+        try {
+          toast.loading("Adding product...", { id: "loadingProduct" });
+          await axios
+            .post("/api/addProduct", {
+              ...values,
+              images,
+            })
+            .then((res) => {
+              setProductState((prev) => [...prev, res.data]);
+              toast.remove("loadingProduct");
+              toast.success("Product added successfully");
+              setSelectedFiles([]);
+              setValues({
+                name: "",
+                description: "",
+                price: "",
+              });
+              setLoading(false);
+              setTimeout(() => {
+                setProductModal(false);
+              }, 500);
+            });
+        } catch (err) {
+          toast.remove("loading");
+          toast.error("Something went wrong");
+        }
+      },
+      onUploadError: () => {
+        toast.remove("loading");
+        toast.error("Something went wrong");
+      },
+      // onUploadBegin: () => {
+      //   alert("upload has begun");
+      // },
+    }
+  );
+
+  const fileTypes = permittedFileInfo?.config
+    ? Object.keys(permittedFileInfo?.config)
+    : [];
 
   const handleForm = async () => {
     setLoading(true);
@@ -32,16 +92,17 @@ export default function Modal() {
         abortEarly: false,
       });
       if (!isValid) {
-        setErrors(isValid);
         return;
       }
+      toast.loading("Uploading images...", { id: "loading" });
+      await startUpload(selectedFiles);
     } catch (error: any) {
       setErrors(error.errors);
       setLoading(false);
     }
   };
   return (
-    <DialogContent className="max-h-[80vh] overflow-y-scroll bg-white max-w-2xl w-full">
+    <DialogContent className="max-h-[80vh] overflow-y-scroll bg-background max-w-2xl w-full ">
       <DialogHeader>
         <DialogTitle className="text-center text-3xl mb-6">
           Add a Product
@@ -90,7 +151,14 @@ export default function Modal() {
           }}
         />
       </div>
-      <ImageUpload />
+      <ImageUpload
+        selectedFiles={selectedFiles}
+        setSelectedFiles={setSelectedFiles}
+        fileTypes={fileTypes}
+      />
+      <Button className="w-full" onClick={handleForm} disabled={loading}>
+        {loading ? <Spinner /> : "Add Product"}
+      </Button>
     </DialogContent>
   );
 }

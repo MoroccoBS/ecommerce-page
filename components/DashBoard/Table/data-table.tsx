@@ -57,9 +57,9 @@ export function DataTable<TData, TValue>({
           {name} ({table.getFilteredRowModel().rows.length})
         </h1>
         <Search
-          value={(table.getColumn("email")?.getFilterValue() as string) ?? ""}
+          value={(table.getColumn("name")?.getFilterValue() as string) ?? ""}
           onChange={(event) =>
-            table.getColumn("email")?.setFilterValue(event.target.value)
+            table.getColumn("name")?.setFilterValue(event.target.value)
           }
           className="ml-auto"
         />

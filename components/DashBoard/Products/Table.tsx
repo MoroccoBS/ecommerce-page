@@ -20,18 +20,22 @@ interface TableProps {
 
 export default function Table({ products }: TableProps) {
   const [productModal, setProductModal] = useState(false);
+  const [productsState, setProductsState] = useState(products);
   return (
     <>
       <DataTable
         columns={productsColumns}
-        data={products as Product[]}
+        data={productsState}
         name="Products"
         button={true}
         btnLabel="Add Product"
         setModal={setProductModal}
       />
       <Dialog open={productModal} onOpenChange={setProductModal}>
-        <Modal />
+        <Modal
+          setProductModal={setProductModal}
+          setProductState={setProductsState}
+        />
       </Dialog>
     </>
   );
